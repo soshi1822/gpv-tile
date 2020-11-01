@@ -1,6 +1,9 @@
 {
   "name": "gpv-tile",
   "version": "1.0.0",
+  "main": "src/index.js",
+  "types": "src/index.ts",
+  "private": true,
   "dependencies": {
     "canvas": "^2.6.1"
   },
