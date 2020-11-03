@@ -1,31 +1,31 @@
-import { Canvas, createCanvas } from 'canvas';
+import { Canvas, CanvasRenderingContext2D, createCanvas } from 'canvas';
 import { writeFileSync } from 'fs';
 
 export class GPVTile {
   private readonly start: [number, number];
   private readonly end: [number, number];
-  private readonly maxZooe: number;
+  private readonly maxZoom: number;
   private readonly minZoom: number;
   private readonly canvas: Canvas;
-  private readonly ctx;
+  private readonly ctx: CanvasRenderingContext2D;
 
   constructor(option: { startLatitude: number, startLongitude: number, endLatitude: number, endLongitude: number, maxZoom?: number, minZoom?: number }) {
-    this.maxZooe = option.maxZoom ?? 9;
+    this.maxZoom = option.maxZoom ?? 9;
     this.minZoom = option.minZoom ?? 3;
-    this.start = [lat2pint(option.startLatitude, this.maxZooe), lon2pint(option.startLongitude, this.maxZooe)];
-    this.end = [lat2pint(option.endLatitude, this.maxZooe), lon2pint(option.endLongitude, this.maxZooe)];
+    this.start = [lat2pint(option.startLatitude, this.maxZoom), lon2pint(option.startLongitude, this.maxZoom)];
+    this.end = [lat2pint(option.endLatitude, this.maxZoom), lon2pint(option.endLongitude, this.maxZoom)];
     this.canvas = createCanvas(this.end[1] - this.start[1], this.end[0] - this.start[0]);
     this.ctx = this.canvas.getContext('2d');
   }
 
   fillRect(color: string, startLatitude: number, startLongitude: number, endLatitude: number, endLongitude: number) {
     const start = [
-      lat2pint(startLatitude, this.maxZooe),
-      lon2pint(startLongitude, this.maxZooe)
+      lat2pint(startLatitude, this.maxZoom),
+      lon2pint(startLongitude, this.maxZoom)
     ];
     const end = [
-      lat2pint(endLatitude, this.maxZooe),
-      lon2pint(endLongitude, this.maxZooe)
+      lat2pint(endLatitude, this.maxZoom),
+      lon2pint(endLongitude, this.maxZoom)
     ];
 
     this.ctx.fillStyle = color;
@@ -34,7 +34,7 @@ export class GPVTile {
 
   export() {
     this.ctx.save();
-    writeFileSync('./out.txt', this.canvas.toDataURL('image/png'));
+    writeFileSync('./out.png', this.canvas.toBuffer('image/png', { compressionLevel: 0 }));
   }
 }
 
